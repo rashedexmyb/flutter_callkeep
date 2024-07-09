@@ -5,6 +5,7 @@ import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
 typedef CallKeepEventRecord = ({CallEvent event, CallKeepEventType type});
 
+/// The web implementation of [CallKeepPlatform].
 final class CallKeepWebPlugin extends CallKeepPlatform {
   /// The event stream controller.
   final _eventsStreamController =
@@ -16,7 +17,7 @@ final class CallKeepWebPlugin extends CallKeepPlatform {
   /// Constructs a CallKeepWebPlugin.
   CallKeepWebPlugin();
 
-  /// Factory method that initializes the Battery plugin platform with an instance
+  /// Factory method that initializes the CallKeep plugin platform with an instance
   /// of the plugin for the web.
   static void registerWith(Registrar registrar) {
     CallKeepPlatform.instance = CallKeepWebPlugin();

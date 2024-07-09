@@ -5,7 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_callkeep_platform_interface/flutter_callkeep_platform_interface.dart';
 import 'package:flutter_callkeep_platform_interface/src/models/callkeep_event_mapper.dart';
 
-base class MethodChannelCallKeep extends CallKeepPlatform {
+/// Method channel implementation for [CallKeepPlatform]
+final class MethodChannelCallKeep extends CallKeepPlatform {
   @visibleForTesting
   MethodChannel methodChannel = const MethodChannel('flutter_callkeep');
   @visibleForTesting

@@ -12,7 +12,7 @@ base class CallKeepPlatform {
 
   /// The default instance of [CallKeepPlatform] to use.
   ///
-  /// Defaults to [MethodChannelBattery].
+  /// Defaults to [MethodChannelCallKeep].
   static CallKeepPlatform instance = MethodChannelCallKeep();
 
   /// Configures the plugin.
