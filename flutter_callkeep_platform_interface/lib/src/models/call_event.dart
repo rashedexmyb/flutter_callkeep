@@ -1,11 +1,9 @@
-import 'package:flutter_callkeep/flutter_callkeep.dart';
+import 'package:flutter_callkeep_platform_interface/src/models/callkeep_base_event.dart';
 
-/// Holds the call data for CallKeep
-///
-/// This is used as base for both [CallKeepIncomingConfig], [CallKeepOutgoingConfig]
+/// Holds the data for CallKeep call event
 ///
 /// But it's also the data returned with multiple events in the package
-class CallKeepCallData extends CallKeepBaseData {
+class CallEvent extends CallKeepBaseEvent {
   /// Caller's name.
   final String? callerName;
 
@@ -24,18 +22,18 @@ class CallKeepCallData extends CallKeepBaseData {
   /// Whether call is accepted or not, defaults to false
   final bool isAccepted;
 
-  CallKeepCallData({
-    required String uuid,
+  CallEvent({
+    required super.uuid,
     this.callerName,
     this.handle,
     this.hasVideo = false,
     this.isAccepted = false,
     this.duration = 180,
     this.extra,
-  }) : super(uuid: uuid);
+  });
 
-  factory CallKeepCallData.fromMap(Map<String, dynamic> map) {
-    return CallKeepCallData(
+  factory CallEvent.fromMap(Map<String, dynamic> map) {
+    return CallEvent(
       uuid: map['id'] ?? '',
       callerName: map['callerName'],
       handle: map['handle'],
@@ -58,8 +56,27 @@ class CallKeepCallData extends CallKeepBaseData {
     };
   }
 
+  CallEvent copyWith({
+    String? callerName,
+    String? handle,
+    bool? hasVideo,
+    bool? isAccepted,
+    double? duration,
+    Map<String, dynamic>? extra,
+  }) {
+    return CallEvent(
+      uuid: uuid,
+      callerName: callerName ?? this.callerName,
+      handle: handle ?? this.handle,
+      hasVideo: hasVideo ?? this.hasVideo,
+      isAccepted: isAccepted ?? this.isAccepted,
+      duration: duration ?? this.duration,
+      extra: extra ?? this.extra,
+    );
+  }
+
   @override
   String toString() {
-    return 'CallKeepCallData(uuid: $uuid, callerName: $callerName, handle: $handle, hasVideo: $hasVideo, duration: $duration, extra: $extra, isAccepted: $isAccepted)';
+    return 'CallEvent(uuid: $uuid, callerName: $callerName, handle: $handle, hasVideo: $hasVideo, duration: $duration, extra: $extra, isAccepted: $isAccepted)';
   }
 }

@@ -1,16 +1,16 @@
-import 'package:flutter_callkeep/flutter_callkeep.dart';
+import 'package:flutter_callkeep_platform_interface/src/models/callkeep_base_event.dart';
 
 /// The data for toggling call group event from CallKeep
-class CallGroupToggleData extends CallKeepBaseData {
+class CallGroupToggleEvent extends CallKeepBaseEvent {
   final String callUuidToGroupWith;
 
-  CallGroupToggleData({
+  CallGroupToggleEvent({
     required String callUuid,
     required this.callUuidToGroupWith,
   }) : super(uuid: callUuid);
 
-  factory CallGroupToggleData.fromMap(Map<String, dynamic> map) {
-    return CallGroupToggleData(
+  factory CallGroupToggleEvent.fromMap(Map<String, dynamic> map) {
+    return CallGroupToggleEvent(
       callUuid: map['id'] ?? '',
       callUuidToGroupWith: map['callUUIDToGroupWith'] ?? '',
     );
