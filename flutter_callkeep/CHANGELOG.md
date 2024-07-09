@@ -1,3 +1,11 @@
+## 1.0.0
+- Depend on `flutter_callkeep_platform_interface` 1.0.0
+- Rewrite our API to use `flutter_callkeep_platform_interface` and `flutter_callkeep_platform_interface` to provide a common API for all platforms
+- (Web) Add support for web. 
+- (Android/iOS) Add `acceptCall` implementation
+- (iOS) No longer return `answerCall` and `outgoingCall` when audio session is activated.
+- (Android) Fix crash when registering receiver on Android 13+
+
 ## 0.3.4
 - (Android) Support Gradle plugin 8+
 - (Android) Fix FullScreenIntent not being removed when `endAllCalls` is called (#63)

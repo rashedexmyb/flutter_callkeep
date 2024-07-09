@@ -2,13 +2,58 @@
 
 Showing incoming call notification/screen using iOS CallKit and Android Custom UI for Flutter
 
+Web is supported but user must build their own incoming call UI in Flutter, see below.
+
 ## Native setup
 
 flutter_callkeep requires the following permissions.
 
 ### Android
 
-No extra setup is needed
+in `AndroidManifest.xml`, set `launchMode` to `singleInstance` for our main activity.
+
+```xml
+ <manifest...>
+    
+    ...
+    <activity ...
+    android:name=".MainActivity"
+    android:launchMode="singleInstance">
+    ...
+    ...
+
+</manifest>
+```
+
+on Android 13+ you need to ask for Notifications permission in order to show incoming call notification.
+
+You can either achieve that using firebase messaging:
+```dart
+final firebaseMessaging = FirebaseMessaging.instance;
+final notificationSettings = await firebaseMessaging.getNotificationSettings();
+final isPermissionDenied =
+    notificationSettings.authorizationStatus == AuthorizationStatus.denied;
+
+...
+// We request  Android 13 and above permission as it is denied by default and we have to ask
+// But for iOS we only ask if permission is not denied, as it defaults to notDetermined on first boot
+final isAndroid13OrAbove = (UniversalPlatform.isAndroid &&
+((await DeviceInfoPlugin().androidInfo).version.sdkInt) >= 33);
+
+// TODO(any): maybe show a custom UI if permission is denied for all platforms
+// to get through how important notification permissions are
+final shouldPrompt =
+(isAndroid13OrAbove && isPermissionDenied) || !isPermissionDenied;
+
+if(shouldPrompt){
+final settings = await firebaseMessaging.requestPermission();
+
+}
+...
+
+```
+
+or by using the [`permission_handler` package](https://pub.dev/packages/permission_handler)
 
 
 ### iOS
@@ -86,95 +131,144 @@ import flutter_callkeep
 
 ## Usage
 
+### Dependency:
+Add the dependency manually to your `pubspec.yaml` file:
+
+```yaml
+dependencies:
+  flutter_callkeep: ^(latest_version)
+```
+
+or run:
+
+```bash
+flutter pub add flutter_callkeep
+```
+
 ### Setup: 
 
-You need to have base `CallKeep` config setup to reduce code duplication and make it easier to display incoming calls: 
+You need to configure the package before displaying incoming calls: 
 
 ```dart
- final callKeepBaseConfig = CallKeepBaseConfig(
-      appName: 'Done',
-      androidConfig: CallKeepAndroidConfig(
-        logo: 'logo',
-        notificationIcon: 'notification_icon',
-        ringtoneFileName: 'ringtone.mp3',
-        accentColor: '#34C7C2',
-      ),
-      iosConfig: CallKeepIosConfig(
-        iconName: 'Icon',
-        maximumCallGroups: 1,
-      ),
-    );
+void configureCallkeep() {
+  final config = CallKeepConfig(
+    appName: 'CallKeep',
+    // Other plugin configurations
+    android: CallKeepAndroidConfig(
+      // Android configuration
+    ),
+    ios: CallKeepIosConfig(
+      // iOS configuration
+    ),
+    // Headers if needed
+    headers: <String, dynamic>{'apiKey': 'Abc@123!', 'platform': 'flutter'},
+  );
+  CallKeep.instance.configure(config);
+}
 ```
 
 ### Display incoming call:
 
 ```dart
-// Config and uuid are the only required parameters
-final config = CallKeepIncomingConfig.fromBaseConfig(
-    config: callKeepBaseConfig,
-    uuid: uuid,
-    contentTitle: 'Incoming call from Done',
-    hasVideo: hasVideo,
-    handle: handle,
-    callerName: incomingCallUsername,
-    extra: callData,
+final data = CallEvent(
+  uuid: uuid,
+  callerName: 'Test User',
+  handle: '0123456789',
+  hasVideo: false,
+  duration: 30000,
+  extra: <String, dynamic>{'userId': '1a2b3c4d'},
 );
-await CallKeep.instance.displayIncomingCall(config);
+
+await CallKeep.instance.displayIncomingCall(data);
 ```
 
-### Show missed call notification (Android only):
+### Show missed call notification (Android only and may be removed in later versions):
 
 ```dart
-// config and uuid are the only required parameters
-final config = CallKeepIncomingConfig.fromBaseConfig(
-    config: callKeepBaseConfig,
-    uuid: uuid,
-    contentTitle: 'Incoming call from Done',
-    hasVideo: hasVideo,
-    handle: handle,
-    callerName: incomingCallUsername,
-    extra: callData,
+final data = CallEvent(
+  uuid: uuid,
+  callerName: 'Test User',
+  handle: '0123456789',
+  hasVideo: false,
+  duration: 30000,
+  extra: <String, dynamic>{'userId': '1a2b3c4d'},
 );
-await CallKeep.instance.showMissCallNotification(config);
+
+await CallKeep.instance.showMissCallNotification(data);
 ```
 
 ### Start an outgoing call:
 
 ```dart
-// config and uuid are the only required parameters
-final config = CallKeepOutgoingConfig.fromBaseConfig(
-    config: DoneCallsConfig.instance.callKeepBaseConfig,
-    uuid: uuid,
-    handle: handle,
-    hasVideo: hasVideo ?? false,
+final data = CallEvent(
+  uuid: uuid,
+  callerName: 'Test User',
+  handle: '0123456789',
+  hasVideo: false,
+  duration: 30000,
+  extra: <String, dynamic>{'userId': '1a2b3c4d'},
 );
-CallKeep.instance.startCall(config);
+
+CallKeep.instance.startCall(data);
 ```
 
-### Handling events:
+### Handling events and showing custom UI (Web):
+
+You need to pass your callbacks for each event to the plugin's `handler` property
+
+if the platform doesn't support incoming call display - such as CallKit for iOS or custom activity for Android -, 
+you can show your own incoming call UI using the `onCallIncoming` event.
+
+We can check first if the plugin is displaying incoming call UI or not using `CallKeep.instance.isIncomingCallDisplayed` and show our custom UI accordingly.
 
 ```dart
-CallKeep.instance.onEvent.listen((event) async {
-    // TODO: Implement other events
-    if (event == null) return;
-    switch (event.type) {
-        case CallKeepEventType.callAccept:
-        final data = event.data as CallKeepCallData;
-        print('call answered: ${data.toMap()}');
-        NavigationService.instance
-            .pushNamedIfNotCurrent(AppRoute.callingPage, args: data.toMap());
-        if (callback != null) callback.call(event);
-        break;
-        case CallKeepEventType.callDecline:
-        final data = event.data as CallKeepCallData;
-        print('call declined: ${data.toMap()}');
-        await requestHttp("ACTION_CALL_DECLINE_FROM_DART");
-        if (callback != null) callback.call(data);
-        break;
-        default:
-        break;
-    }
-});
+ Future<void> setEventHandler() async {
+  CallKeep.instance.handler = CallEventHandler(
+    onCallIncoming: (event) {
+      print('call incoming: ${event.toMap()}');
+      if (!CallKeep.instance.isIncomingCallDisplayed) {
+        showAdaptiveDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text("Incoming Call"),
+                content: Text("Incoming call from ${event.callerName}"),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      CallKeep.instance.acceptCall(event.uuid);
+                      Navigator.pop(context);
+                    },
+                    child: Text("Accept"),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      CallKeep.instance.endCall(event.uuid);
+                      Navigator.pop(context);
+                    },
+                    child: Text("Decline"),
+                  ),
+                ],
+              );
+            });
+      }
+    },
+    onCallStarted: (event) {
+      print('call started: ${event.toMap()}');
+    },
+    onCallEnded: (event) {
+      print('call ended: ${event.toMap()}');
+    },
+    onCallAccepted: (event) {
+      print('call answered: ${event.toMap()}');
+      NavigationService.instance
+          .pushNamedIfNotCurrent(AppRoute.callingPage, args: event.toMap());
+    },
+    onCallDeclined: (event) async {
+      print('call declined: ${event.toMap()}');
+    },
+  );
+}
 ```
 
 ### Customization (Android):
