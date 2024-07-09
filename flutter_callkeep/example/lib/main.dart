@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -11,7 +13,7 @@ import 'package:uuid/uuid.dart';
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print("Handling a background message: ${message.messageId}");
   configureCallkeep();
-  displayIncomingCall(Uuid().v4());
+  displayIncomingCall(const Uuid().v4());
 }
 
 void configureCallkeep() {
@@ -66,12 +68,14 @@ Future<void> displayIncomingCall(String uuid) async {
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
   @override
-  _MyAppState createState() => _MyAppState();
+  State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
@@ -83,7 +87,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    _uuid = Uuid();
+    _uuid = const Uuid();
     initFirebase();
     WidgetsBinding.instance.addObserver(this);
     //Check call when open app from terminated

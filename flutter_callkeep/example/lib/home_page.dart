@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -7,6 +9,8 @@ import 'package:flutter_callkeep_example/navigation_service.dart';
 import 'package:uuid/uuid.dart';
 
 class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
   @override
   State<StatefulWidget> createState() {
     return HomePageState();
@@ -21,7 +25,7 @@ class HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    _uuid = Uuid();
+    _uuid = const Uuid();
     _currentUuid = "";
     textEvents = "";
     initCurrentCall();
@@ -35,35 +39,35 @@ class HomePageState extends State<HomePage> {
         title: const Text('CallKeep example app'),
         actions: <Widget>[
           IconButton(
-            icon: Icon(
+            icon: const Icon(
               Icons.call,
               color: Colors.black54,
             ),
             onPressed: () => makeFakeCallInComing(context),
           ),
           IconButton(
-            icon: Icon(
+            icon: const Icon(
               Icons.call_end,
               color: Colors.black54,
             ),
             onPressed: endCurrentCall,
           ),
           IconButton(
-            icon: Icon(
+            icon: const Icon(
               Icons.call_made,
               color: Colors.black54,
             ),
             onPressed: startOutGoingCall,
           ),
           IconButton(
-            icon: Icon(
+            icon: const Icon(
               Icons.call_merge,
               color: Colors.black54,
             ),
             onPressed: activeCalls,
           ),
           IconButton(
-            icon: Icon(
+            icon: const Icon(
               Icons.clear_all_sharp,
               color: Colors.black54,
             ),
@@ -79,11 +83,11 @@ class HomePageState extends State<HomePage> {
                 constraints: BoxConstraints(
                   minHeight: viewportConstraints.maxHeight,
                 ),
-                child: Text('$textEvents'),
+                child: Text(textEvents),
               ),
             );
           } else {
-            return Center(
+            return const Center(
               child: Text('No Event'),
             );
           }
@@ -159,7 +163,7 @@ class HomePageState extends State<HomePage> {
               context: context,
               builder: (context) {
                 return AlertDialog(
-                  title: Text("Incoming Call"),
+                  title: const Text("Incoming Call"),
                   content: Text("Incoming call from ${event.callerName}"),
                   actions: [
                     TextButton(
@@ -167,14 +171,14 @@ class HomePageState extends State<HomePage> {
                         CallKeep.instance.acceptCall(event.uuid);
                         Navigator.pop(context);
                       },
-                      child: Text("Accept"),
+                      child: const Text("Accept"),
                     ),
                     TextButton(
                       onPressed: () {
                         CallKeep.instance.endCall(event.uuid);
                         Navigator.pop(context);
                       },
-                      child: Text("Decline"),
+                      child: const Text("Decline"),
                     ),
                   ],
                 );

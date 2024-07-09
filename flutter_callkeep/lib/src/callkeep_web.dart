@@ -13,8 +13,6 @@ final class CallKeepWebPlugin extends CallKeepPlatform {
 
   final List<CallEvent> _calls = [];
 
-  CallKeepConfig? config;
-
   /// Constructs a CallKeepWebPlugin.
   CallKeepWebPlugin();
 
@@ -85,10 +83,10 @@ final class CallKeepWebPlugin extends CallKeepPlatform {
 
   @override
   Future<void> endAllCalls() async {
-    _calls.forEach((call) {
+    for (final call in _calls) {
       final event = (event: call, type: CallKeepEventType.callEnded);
       _eventsStreamController.add(event);
-    });
+    }
     _calls.clear();
   }
 

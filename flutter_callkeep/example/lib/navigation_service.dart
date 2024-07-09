@@ -24,7 +24,9 @@ class NavigationService {
   /// `args` is optional data to be sent to new page
   Future<T?> pushNamed<T extends Object>(String routeName,
       {Object? args}) async {
+    // ignore: avoid_print
     print(navigationKey);
+    // ignore: avoid_print
     print(navigationKey.currentState);
     return navigationKey.currentState?.pushNamed<T>(
       routeName,

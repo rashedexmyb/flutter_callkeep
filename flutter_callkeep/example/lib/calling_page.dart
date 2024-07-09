@@ -6,6 +6,8 @@ import 'package:flutter_callkeep_example/navigation_service.dart';
 import 'package:http/http.dart';
 
 class CallingPage extends StatefulWidget {
+  const CallingPage({super.key});
+
   @override
   State<StatefulWidget> createState() {
     return CallingPageState();
@@ -23,7 +25,7 @@ class CallingPageState extends State<CallingPage> {
     debugPrint(calling?.toString());
 
     return Scaffold(
-      body: Container(
+      body: SizedBox(
         height: MediaQuery.of(context).size.height,
         width: double.infinity,
         child: Center(
@@ -31,7 +33,7 @@ class CallingPageState extends State<CallingPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text('Calling...'),
+              const Text('Calling...'),
               TextButton(
                 style: ButtonStyle(
                   foregroundColor: WidgetStateProperty.all<Color>(Colors.blue),
@@ -44,7 +46,7 @@ class CallingPageState extends State<CallingPage> {
                   NavigationService.instance.goBack();
                   await requestHttp('END_CALL');
                 },
-                child: Text('End Call'),
+                child: const Text('End Call'),
               )
             ],
           ),
