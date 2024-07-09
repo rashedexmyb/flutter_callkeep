@@ -144,9 +144,10 @@ packages:
   flutter_callkeep_platform_interface:
     dependency: transitive
     description:
-      path: "../../flutter_callkeep_platform_interface"
-      relative: true
-    source: path
+      name: flutter_callkeep_platform_interface
+      sha256: f08248a68441eec2f2c00c4bfcfd8b798860ca576c0ad51102650f231b92f4c5
+      url: "https://pub.dev"
+    source: hosted
     version: "1.0.0"
   flutter_lints:
     dependency: "direct dev"
