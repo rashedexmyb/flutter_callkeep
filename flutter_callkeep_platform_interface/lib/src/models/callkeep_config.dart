@@ -1,8 +1,4 @@
-import 'package:flutter/widgets.dart';
 import 'package:flutter_callkeep_platform_interface/flutter_callkeep_platform_interface.dart';
-
-typedef IncomingCallBuilder = Widget Function(
-    BuildContext context, CallEvent call);
 
 /// Holds the configuration for CallKeep plugin
 class CallKeepConfig {
