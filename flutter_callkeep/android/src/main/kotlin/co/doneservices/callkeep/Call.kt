@@ -16,7 +16,7 @@ data class Data(val args: Map<String, Any?>) {
     var handle: String = (args["handle"] as? String) ?: ""
     var avatar: String = (args["avatar"] as? String) ?: ""
     var hasVideo: Boolean = (args["hasVideo"] as? Boolean) ?: false
-    var duration: Long = (args["duration"] as? Long) ?: ((args["duration"] as? Int)?.toLong() ?: 30000L)
+    var duration: Long = (args["duration"] as? Long) ?: ((args["duration"] as? Int)?.toLong() ?: 120000L)
     var acceptText: String = (args["acceptText"] as? String) ?: ""
     var declineText: String = (args["declineText"] as? String) ?: ""
     var missedCallText: String = (args["missedCallText"] as? String) ?: ""
