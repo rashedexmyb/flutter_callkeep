@@ -206,7 +206,7 @@ class CallKeepBroadcastReceiver : BroadcastReceiver() {
             "avatar" to getString(EXTRA_CALLKEEP_AVATAR, ""),
             "number" to getString(EXTRA_CALLKEEP_HANDLE, ""),
             "hasVideo" to getBoolean(EXTRA_CALLKEEP_HAS_VIDEO, false),
-            "duration" to getLong(EXTRA_CALLKEEP_DURATION, 0L),
+            "duration" to getLong(EXTRA_CALLKEEP_DURATION, 120000L),
             "acceptText" to getString(EXTRA_CALLKEEP_ACCEPT_TEXT, ""),
             "declineText" to getString(EXTRA_CALLKEEP_DECLINE_TEXT, ""),
             "missedCallText" to getString(EXTRA_CALLKEEP_TEXT_MISSED_CALL, ""),
