@@ -186,7 +186,7 @@ class IncomingCallActivity : Activity() {
             val top = getResources().getDrawable(R.drawable.ic_video);
             btnAnswer.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null);
         }
-        val duration = data?.getLong(EXTRA_CALLKEEP_DURATION, 0L) ?: 0L
+        val duration = data?.getLong(EXTRA_CALLKEEP_DURATION, 120000L) ?: 0L
         wakeLockRequest(duration)
 
         finishTimeout(data, duration)
