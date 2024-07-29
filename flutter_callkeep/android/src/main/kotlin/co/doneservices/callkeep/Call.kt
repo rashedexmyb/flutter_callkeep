@@ -137,7 +137,7 @@ data class Data(val args: Map<String, Any?>) {
                     bundle.getString(CallKeepBroadcastReceiver.EXTRA_CALLKEEP_AVATAR, "")
             data.hasVideo = bundle.getBoolean(CallKeepBroadcastReceiver.EXTRA_CALLKEEP_HAS_VIDEO, false)
             data.duration =
-                    bundle.getLong(CallKeepBroadcastReceiver.EXTRA_CALLKEEP_DURATION, 30000L)
+                    bundle.getLong(CallKeepBroadcastReceiver.EXTRA_CALLKEEP_DURATION, 120000L)
             data.acceptText =
                     bundle.getString(CallKeepBroadcastReceiver.EXTRA_CALLKEEP_ACCEPT_TEXT, "")
             data.declineText =
